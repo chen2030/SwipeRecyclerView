@@ -153,15 +153,17 @@ class AdapterWrapper extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         if (mSwipeMenuCreator == null) return viewHolder;
 
-        contentView = mInflater.inflate(R.layout.x_recycler_view_item, parent, false);
-        ViewGroup viewGroup = contentView.findViewById(R.id.swipe_content);
-        viewGroup.addView(viewHolder.itemView);
-
-        try {
-            Field itemView = getSupperClass(viewHolder.getClass()).getDeclaredField("itemView");
-            if (!itemView.isAccessible()) itemView.setAccessible(true);
-            itemView.set(viewHolder, contentView);
-        } catch (Exception ignored) {
+        if (getItemCount() > 1) {
+            contentView = mInflater.inflate(R.layout.x_recycler_view_item, parent, false);
+            ViewGroup viewGroup = contentView.findViewById(R.id.swipe_content);
+            viewGroup.addView(viewHolder.itemView);
+            try {
+                Field itemView = getSupperClass(viewHolder.getClass()).getDeclaredField("itemView");
+                if (!itemView.isAccessible()) itemView.setAccessible(true);
+                itemView.set(viewHolder, contentView);
+            } catch (Exception ignored) {
+            }
+            return viewHolder;
         }
         return viewHolder;
     }
